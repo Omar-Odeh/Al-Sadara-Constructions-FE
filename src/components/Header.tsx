@@ -5,8 +5,15 @@ import Logo from "../icons/Logo";
 function Header() {
   const { t } = useTranslation();
 
+  const activeClassName = `
+    after:content-[''] after:absolute after:right-0 after:-bottom-5 
+    after:w-full after:border-b-[3px] after:border-secondary`;
+
   return (
-    <header className="flex justify-between items-center px-6 py-4 bg-neutral text-white sticky top-0 z-20">
+    <header
+      className="flex justify-between items-center px-6 py-4 bg-neutral 
+                text-white sticky top-0 z-20 shadow-[0_0_16px_0px_black]"
+    >
       <div className="flex items-center gap-x-4">
         <Logo className="w-8 h-8 fill-current" />
         <h1 className="text-xl font-bold">{t("header.title")}</h1>
@@ -15,10 +22,7 @@ function Header() {
         <NavLink
           className={({ isActive }) =>
             `block relative transition-colors hover:text-secondary ${
-              isActive
-                ? `after:content-[''] after:absolute after:right-0 after:-bottom-5 
-                    after:w-full after:border-b-2 after:border-white`
-                : ""
+              isActive ? activeClassName : ""
             }`
           }
           to="/"
@@ -67,10 +71,7 @@ function Header() {
         <NavLink
           className={({ isActive }) =>
             `block relative transition-colors hover:text-secondary ${
-              isActive
-                ? `after:content-[''] after:absolute after:right-0 after:-bottom-5 
-                    after:w-full after:border-b-2 after:border-white`
-                : ""
+              isActive ? activeClassName : ""
             }`
           }
           to="/login"
