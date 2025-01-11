@@ -101,5 +101,49 @@
     "dontHaveAnAccount": "ليس لديك حساب؟",
     "alreadyHaveAnAccount": "هل لديك حساب بالفعل؟",
     "": ""
+  },
+  "emailVerification": {
+    "title": "تأكيد البريد الإلكتروني",
+    "instruction": "يرجى إدخال رمز التحقق المكون من 6 أرقام الذي أرسلناه إلى بريدك الإلكتروني.",
+    "verify": "تأكيد",
+    "resend": "إعادة إرسال الرمز",
+    "resendSuccess": "تم إرسال الرمز بنجاح!"
+  },
+  "productsPage": {
+    "title": "المنتجات",
+    "cart": "سلة المشتريات",
+    "addToCart": "أضف إلى السلة",
+    "removeFromCart": "إزالة من السلة",
+    "cartEmpty": "سلة التسوق الخاصة بك مازالت فارغة.",
+    "total": "المجموع",
+    "confirmOrder": "تأكيد عملية الشراء",
+    "editProduct": "تعديل المنتج",
+    "addProduct": "إضافة منتج جديد",
+    "productDetails": "تفاضيل المنتج",
+    "productName": "اسم المنتج",
+    "productDescription": "وصف المنتج",
+    "productPrice": "سعر المنتج",
+    "productImage": "صورة المنتج",
+    "preview": "معاينة",
+    "saveChanges": "حفظ التغييرات",
+    "submit": "إضافة المنتج",
+    "validation": {
+      "nameRequired": "الرجاء إدخال اسم المنتج",
+      "descriptionRequired": "الرجاء إدخال وصف المنتج",
+      "priceRequired": "الرجاء إدخال قيمة أكبر من 0 للسعر",
+      "img_urlRequired": "الرجاء إرفاق صورة للمنتج"
+    }
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي"
+  },
+  "error": {
+    "somethingWentWrong": "لقد حدث خطأ ما!",
+    "noFileUploaded": "لم يتم إرفاق ملف.",
+    "invalidFileType": "الملفات المسموح بها هي: PNG ،JPG و GIF"
+  },
+  "success": {
+    "uploadedSuccessfuly": "لقد تم إرفاق الملف بنجاح!"
   }
 }

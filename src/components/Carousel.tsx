@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
-import Chevron from "../icons/Chevron";
+import Chevron from "@/icons/Chevron";
 
 interface Props {
   containerClassName?: string;
@@ -11,9 +11,9 @@ function Carousel({ containerClassName = "", images, children }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const [blockTransition, setBlockTransition] = useState(false);
-  const [timerId, setTimerId] = useState<number>(0);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout>();
   const [imgIndex, setImgIndex] = useState(0);
-  const [intervalId, setIntervalId] = useState<number>(0);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout>();
 
   const initInterval = () => {
     return setInterval(() => updateImgIndex(1), 5000);
@@ -70,8 +70,8 @@ function Carousel({ containerClassName = "", images, children }: Props) {
   return (
     <div className={`overflow-hidden relative ${containerClassName}`}>
       <div
-        className="flex items-center justify-between p-6 gap-x-4 
-                  absolute inset-0 z-10 bg-neutral/40 text-white"
+        className="flex items-center justify-between px-4 md:px-6 gap-x-4 
+                  absolute inset-0 z-10 bg-primary/40 text-white"
       >
         <button
           onClick={() => {

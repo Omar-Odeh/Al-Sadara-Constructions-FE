@@ -1,40 +1,110 @@
-import { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Product } from "@/models/product";
+import { formatCurrency } from "@/utils/formatters";
+import { useCart } from "@/hooks/use-cart";
+// import {
+//   Tooltip,
+//   TooltipContent,
+//   TooltipTrigger,
+// } from "@/components/ui/tooltip";
+import Tooltip from "@/components/Tooltip";
+import PlusIcon from "@/icons/PlusIcon";
+import TrashIcon from "@/icons/TrashIcon";
+import { Link } from "react-router-dom";
+import EditIcon from "@/icons/EditIcon";
 
 interface Props {
-  headline: string;
-  description: string;
-  imgPath: string;
-  icon: ReactNode;
+  userRole: "user" | "admin";
+  product: Product;
+  isPreview?: boolean;
 }
 
-function ProductCard({ headline, description, imgPath, icon }: Props) {
+function ProductCard({ userRole, product, isPreview = false }: Props) {
+  const { t } = useTranslation();
+  const { addItem, removeItem, isItemAdded } = useCart();
+
   return (
-    <div className="group bg-accent text-neutral cursor-pointer overflow-hidden shadow-[0_0_16px_0px_black] rounded-xl">
-      <div className="relative w-full h-[500px] overflow-hidden">
-        <div className="absolute inset-0 transition-colors group-hover:bg-neutral/30"></div>
-        <img
-          className="min-w-full min-h-full object-cover"
-          src={imgPath}
-          alt=""
-        />
+    <div
+      className="flex flex-col p-4 gap-6 text-primary bg-neutral 
+                rounded-lg shadow-primary/30 shadow-md"
+    >
+      <div
+        className="flex items-center justify-center w-full aspect-[1.5] 
+                  bg-white overflow-hidden rounded-lg"
+      >
+        {product.img_url ? (
+          <img
+            src={
+              product.img_url.startsWith("blob:")
+                ? product.img_url
+                : `${window.location.origin}/${product.img_url}`
+            }
+            onError={(e) => {
+              (
+                e.target as HTMLImageElement
+              ).src = `${window.location.origin}/src/assets/image-placeholder.svg`;
+            }}
+            alt="product-img"
+            className="min-w-full min-h-full object-cover mix-blend-multiply"
+          />
+        ) : (
+          <img
+            src={`${window.location.origin}/src/assets/image-placeholder.svg`}
+            alt="product-img"
+            className="w-20 h-20 sm:w-24 sm:h-24"
+          />
+        )}
       </div>
-      <div className="relative p-6 space-y-4">
-        <div className="flex gap-x-4">
-          <div className="border-r-4 border-secondary"></div>
-          <h2 className="text-2xl font-medium">{headline}</h2>
-        </div>
-        <p className="text-xl">{description}</p>
-        <div className="absolute top-4 left-0 !mt-0 -translate-y-full w-full flex justify-center items-end">
-          <div className="h-10 w-10 mb-4 overflow-hidden">
-            <div className="w-full h-full bg-transparent rounded-bl-full shadow-[0_0_0_20px_#f2f3f6]"></div>
-          </div>
-          <div className="bg-accent h-fit p-4 pb-0 rounded-t-full transition-colors group-hover:text-secondary">
-            {icon}
-          </div>
-          <div className="h-10 w-10 mb-4 overflow-hidden">
-            <div className="w-full h-full bg-transparent rounded-br-full shadow-[0_0_0_20px_#f2f3f6]"></div>
-          </div>
-        </div>
+      <div className="space-y-2">
+        <p className="font-medium">{product.name}</p>
+        <p className="line-clamp-3">{product.description}</p>
+      </div>
+      <div className="flex items-center justify-between gap-4 mt-auto">
+        <p className="text-lg font-bold text-right">
+          {formatCurrency(product.price)}
+        </p>
+        <Tooltip
+          content={
+            <p>
+              {userRole === "user"
+                ? isItemAdded(product.id)
+                  ? t("productsPage.removeFromCart")
+                  : t("productsPage.addToCart")
+                : t("productsPage.editProduct")}
+            </p>
+          }
+        >
+          {userRole === "user" ? (
+            <button
+              onClick={() => {
+                if (isPreview) return;
+                isItemAdded(product.id)
+                  ? removeItem(product.id)
+                  : addItem(product);
+              }}
+              className={`flex self-start items-center justify-center min-w-8 
+                          min-h-8 transition-colors rounded-full ${
+                            isItemAdded(product.id)
+                              ? "text-error bg-[#F9E9E7] hover:bg-error hover:text-white"
+                              : "text-white bg-primary hover:bg-primary-600"
+                          }`}
+            >
+              {isItemAdded(product.id) ? (
+                <TrashIcon className="w-5 h-5" />
+              ) : (
+                <PlusIcon className="w-5 h-5" />
+              )}
+            </button>
+          ) : (
+            <Link
+              to={`/products/${product.id}`}
+              className="flex items-center justify-center transition-colors min-w-8 min-h-8
+                        text-white bg-primary hover:bg-primary-600 rounded-full"
+            >
+              <EditIcon className="w-5 h-5" />
+            </Link>
+          )}
+        </Tooltip>
       </div>
     </div>
   );
