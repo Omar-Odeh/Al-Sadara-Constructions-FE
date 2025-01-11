@@ -2,11 +2,12 @@ import { ReactNode, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import ClickAwayListener from "react-click-away-listener";
 import Logo from "@/icons/Logo";
 import MenuIcon from "@/icons/MenuIcon";
 import HomeIcon from "@/icons/HomeIcon";
 import LoginIcon from "@/icons/LoginIcon";
-import ClickAwayListener from "react-click-away-listener";
+import StoreIcon from "@/icons/StoreIcon";
 
 function Header() {
   const { t } = useTranslation();
@@ -26,7 +27,12 @@ function Header() {
     {
       label: t("header.home"),
       to: "/",
-      icon: <HomeIcon className="w-5 h-fit fill-current" />,
+      icon: <HomeIcon className="w-5 h-fit" />,
+    },
+    {
+      label: t("header.products"),
+      to: "/products",
+      icon: <StoreIcon className="w-5 h-fit" />,
     },
     {
       label: t("header.login"),

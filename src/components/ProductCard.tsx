@@ -1,16 +1,11 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Product } from "@/models/product";
 import { formatCurrency } from "@/utils/formatters";
+import { Product } from "@/models/product";
 import { useCart } from "@/hooks/use-cart";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip";
 import Tooltip from "@/components/Tooltip";
 import PlusIcon from "@/icons/PlusIcon";
 import TrashIcon from "@/icons/TrashIcon";
-import { Link } from "react-router-dom";
 import EditIcon from "@/icons/EditIcon";
 
 interface Props {
@@ -40,9 +35,9 @@ function ProductCard({ userRole, product, isPreview = false }: Props) {
                 : `${window.location.origin}/${product.img_url}`
             }
             onError={(e) => {
-              (
-                e.target as HTMLImageElement
-              ).src = `${window.location.origin}/src/assets/image-placeholder.svg`;
+              const img = e.target as HTMLImageElement;
+              img.src = `${window.location.origin}/src/assets/image-placeholder.svg`;
+              img.className = "w-20 h-20 sm:w-24 sm:h-24";
             }}
             alt="product-img"
             className="min-w-full min-h-full object-cover mix-blend-multiply"

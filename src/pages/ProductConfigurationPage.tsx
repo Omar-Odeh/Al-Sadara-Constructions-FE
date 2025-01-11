@@ -3,15 +3,13 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Product } from "@/models/product";
 import { useWindowResize } from "@/hooks/use-window-resize";
+import { useUpload } from "@/hooks/use-upload";
 import ProductCard from "@/components/ProductCard";
 import ImageInput from "@/components/ImageInput";
-import { useUpload } from "@/hooks/use-upload";
 
 interface Props {
   products?: Product[];
 }
-
-type ProductKeys = keyof Omit<Product, "id">;
 
 function ProductConfigurationPage({ products = [] }: Props) {
   const { t } = useTranslation();

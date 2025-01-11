@@ -1,4 +1,3 @@
-import { MutableRefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,11 +17,11 @@ interface Props {
 function Pagination({ totalPages, baseUrl }: Props) {
   const [params] = useSearchParams();
   const { t } = useTranslation();
+
   const currentPage = Math.min(
     Math.max(+(params.get("page") || 1), 1),
     totalPages
   );
-
   const renderedPages =
     currentPage < 3
       ? [1, 2, 3]

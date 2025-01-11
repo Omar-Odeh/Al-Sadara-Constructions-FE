@@ -3,6 +3,7 @@ import React from "react";
 function HomeIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+      fill="currentColor"
       width="32px"
       height="32px"
       viewBox="0 0 32 32"
