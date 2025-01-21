@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { formatCurrency } from "@/utils/formatters";
+import { UserRole } from "@/models/user";
 import { Product } from "@/models/product";
 import { useCart } from "@/hooks/use-cart";
 import Tooltip from "@/components/Tooltip";
@@ -9,7 +10,7 @@ import TrashIcon from "@/icons/TrashIcon";
 import EditIcon from "@/icons/EditIcon";
 
 interface Props {
-  userRole: "user" | "admin";
+  userRole: UserRole;
   product: Product;
   isPreview?: boolean;
 }
@@ -27,12 +28,12 @@ function ProductCard({ userRole, product, isPreview = false }: Props) {
         className="flex items-center justify-center w-full aspect-[1.5] 
                   bg-white overflow-hidden rounded-lg"
       >
-        {product.img_url ? (
+        {product.imageUrl ? (
           <img
             src={
-              product.img_url.startsWith("blob:")
-                ? product.img_url
-                : `${window.location.origin}/${product.img_url}`
+              product.imageUrl.startsWith("blob:")
+                ? product.imageUrl
+                : `${window.location.origin}/${product.imageUrl}`
             }
             onError={(e) => {
               const img = e.target as HTMLImageElement;
@@ -61,7 +62,7 @@ function ProductCard({ userRole, product, isPreview = false }: Props) {
         <Tooltip
           content={
             <p>
-              {userRole === "user"
+              {userRole === UserRole.USER
                 ? isItemAdded(product.id)
                   ? t("productsPage.removeFromCart")
                   : t("productsPage.addToCart")
@@ -69,7 +70,7 @@ function ProductCard({ userRole, product, isPreview = false }: Props) {
             </p>
           }
         >
-          {userRole === "user" ? (
+          {userRole === UserRole.USER ? (
             <button
               onClick={() => {
                 if (isPreview) return;

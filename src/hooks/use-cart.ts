@@ -1,6 +1,8 @@
 import { useRecoilState } from "recoil";
 import { cartAtom } from "@/atoms/cart";
 import { Product } from "@/models/product";
+import { OrderProductRequest } from "@/models/order";
+import { placeOrder } from "@/apis/orders";
 
 export function useCart() {
   const [cart, setCart] = useRecoilState(cartAtom);
@@ -39,6 +41,29 @@ export function useCart() {
     );
   };
 
+  const createOrder = async ({
+    onSuccess,
+    onError,
+  }: {
+    onSuccess: () => void;
+    onError: (error: unknown) => void;
+  }) => {
+    if (cart.length === 0) return;
+    const products: OrderProductRequest[] = cart.map(({ product, count }) => ({
+      productId: product.id,
+      quantity: count,
+    }));
+    try {
+      const res = await placeOrder({ products });
+      if (res.status === 201) {
+        onSuccess();
+        setCart([]);
+      }
+    } catch (error) {
+      onError(error);
+    }
+  };
+
   return {
     cart,
     addItem,
@@ -46,5 +71,6 @@ export function useCart() {
     updateItemQuantity,
     isItemAdded,
     getTotalPrice,
+    placeOrder: createOrder,
   };
 }

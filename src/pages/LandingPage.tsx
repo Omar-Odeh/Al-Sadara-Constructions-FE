@@ -26,6 +26,13 @@ function LandingPage() {
     })
   );
 
+  const whyUs = t("landingPage.whyChooseUs.content", {
+    returnObjects: true,
+  }) as {
+    tagline: string;
+    description: string;
+  }[];
+
   return (
     <main>
       <Carousel
@@ -74,11 +81,40 @@ function LandingPage() {
       <section className="px-6 sm:px-8 md:px-16 xl:px-32 py-8 md:py-16 xl:py-32 text-primary">
         <div className="space-y-6 mx-auto 2xl:max-w-[1200px]">
           <h1 className="px-4 border-r-4 border-accent text-lg md:text-4xl font-bold">
-            {t("landingPage.aboutUs.headline")}
+            {t("landingPage.whyChooseUs.headline")}
           </h1>
-          <p className="text-base md:text-xl">
-            {t("landingPage.aboutUs.content")}
-          </p>
+          <div className="space-y-10 py-6">
+            {whyUs.map(({ tagline, description }, index) => (
+              <div key={index} className="flex items-center gap-4 rounded-lg">
+                <div
+                  className={`relative pl-4 ${
+                    index % 2 ? "pr-8 md:pr-12" : "pr-16 md:pr-24"
+                  }`}
+                >
+                  <div
+                    className={`absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1 ${
+                      index % 2 ? "w-8 md:w-12" : "w-16 md:w-24"
+                    } h-2 md:h-3 bg-accent rounded-r-full`}
+                  ></div>
+                  <div
+                    className="flex items-center justify-center self-start w-8 h-8 min-w-8 min-h-8 
+                                md:w-12 md:h-12 md:min-h-12 md:min-w-12 text-base md:text-2xl 
+                                text-white font-medium bg-accent rounded-full 
+                                shadow-[0_0_0_4px_#ff9850,0_0_0_8px_#ff9850ab,_0_0_0_12px_#ff985055]"
+                  >
+                    {index + 1}
+                  </div>
+                </div>
+                <div className="space-y-4 relative">
+                  <p className="text-sm md:text-lg font-bold">{tagline}</p>
+                  <p className="text-xs md:text-base font-medium">
+                    {description}
+                  </p>
+                  <div className="absolute w-full top-full left-0 border-b border-primary-50/50"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

@@ -1,19 +1,23 @@
-import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { UserRole } from "@/models/user";
 import { Product } from "@/models/product";
 import { useWindowResize } from "@/hooks/use-window-resize";
 import { useUpload } from "@/hooks/use-upload";
 import ProductCard from "@/components/ProductCard";
 import ImageInput from "@/components/ImageInput";
+import { addProduct, getProduct, updateProduct } from "@/apis/products";
+import { toast } from "@/hooks/use-toast";
+import { useMainContext } from "@/contexts/MainContext";
+import LoaderIcon from "@/icons/LoaderIcon";
 
-interface Props {
-  products?: Product[];
-}
-
-function ProductConfigurationPage({ products = [] }: Props) {
+function ProductConfigurationPage() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const { getLoading, setLoading } = useMainContext();
+
+  const navigate = useNavigate();
   const upload = useUpload();
 
   const previewRef = useRef<HTMLDivElement | null>(null);
@@ -22,22 +26,15 @@ function ProductConfigurationPage({ products = [] }: Props) {
 
   const mode: "add" | "edit" = !id || id === "new" ? "add" : "edit";
 
-  const getProduct = () => {
-    const defaultProduct: Omit<Product, "id"> = {
-      name: "",
-      description: "",
-      price: 0,
-      img_url: "",
-    };
-    const foundProduct =
-      mode === "edit" && id
-        ? products.find((product) => product.id === +id)
-        : undefined;
-    return foundProduct || { id: -1, ...defaultProduct };
-  };
-
-  const [product, setProduct] = useState<Product>(getProduct);
+  const [product, setProduct] = useState<Product>({
+    id: -1,
+    name: "",
+    description: "",
+    price: 0,
+    imageUrl: "",
+  });
   const [productImageFile, setProductImageFile] = useState<File | null>(null);
+  const productLoading = getLoading("product");
 
   const validateProduct = () => {
     let isValid: boolean = true;
@@ -55,16 +52,33 @@ function ProductConfigurationPage({ products = [] }: Props) {
 
   const submit = async () => {
     if (!validateProduct()) return;
-    let newProduct = { ...product };
+
+    let newProduct: Omit<Product, "id"> & { id?: number } = { ...product };
+    delete newProduct.id;
     if (productImageFile) {
       const imgUrl = await upload(productImageFile);
-      newProduct = { ...newProduct, img_url: imgUrl };
+      newProduct = { ...newProduct, imageUrl: imgUrl };
     }
-    console.log(newProduct);
     if (mode === "add") {
-      console.log("add product");
+      try {
+        const res = await addProduct(newProduct);
+        if (res.status === 200) {
+          toast({ title: t("productsPage.addedSuccessfully") });
+          setTimeout(() => navigate("/products?page=1"), 500);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      console.log("update product");
+      try {
+        const res = await updateProduct({ ...newProduct, id: product.id });
+        if (res.status === 200) {
+          toast({ title: t("productsPage.updatedSuccessfully") });
+          setTimeout(() => navigate("/products?page=1"), 300);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -85,7 +99,21 @@ function ProductConfigurationPage({ products = [] }: Props) {
     },
   });
 
-  return (
+  useEffect(() => {
+    setLoading("product", false);
+    if (mode === "edit" && id) {
+      setLoading("product", true);
+      getProduct(+id)
+        .then((res) => setProduct(res.data))
+        .finally(() => setLoading("product", false));
+    }
+  }, [mode, id]);
+
+  return productLoading ? (
+    <div className="flex flex-1 items-center justify-center text-primary">
+      <LoaderIcon className="w-16 h-16 animate-spin" />
+    </div>
+  ) : (
     <main className="w-full px-6 sm:px-8 md:px-16 xl:px-32 py-16 text-primary">
       <div className="mx-auto space-y-10 2xl:max-w-[1200px]">
         <h1 className="px-4 border-r-4 border-accent text-lg md:text-4xl font-bold">
@@ -165,7 +193,7 @@ function ProductConfigurationPage({ products = [] }: Props) {
                     setProductImageFile(file);
                     setProduct((prev) => ({
                       ...prev,
-                      img_url: blobUrl,
+                      imageUrl: blobUrl,
                     }));
                   }}
                 />
@@ -180,7 +208,7 @@ function ProductConfigurationPage({ products = [] }: Props) {
                 {t("productsPage.preview")}
               </h2>
               <ProductCard
-                userRole={"user"}
+                userRole={UserRole.USER}
                 product={product}
                 isPreview={true}
               />

@@ -1,19 +1,54 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import { confirm, resendCode } from "@/apis/auth";
+import { useMainContext } from "@/contexts/MainContext";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { toast } from "@/hooks/use-toast";
 
 function EmailVerificationPage() {
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user, setUser } = useMainContext();
   const [code, setCode] = useState("");
 
-  const handleVerify = () => {};
+  const handleVerify = async () => {
+    if (!user) return;
 
-  const handleResend = () => {};
+    const res = await confirm({
+      params: {
+        verificationCode: code,
+        email: user.email,
+      },
+    });
+
+    if (res.status === 200) {
+      setUser(res.data);
+      navigate("/products?page=1");
+    }
+  };
+
+  const handleResend = async () => {
+    if (!user) return;
+
+    const res = await resendCode({
+      params: {
+        email: user.email,
+      },
+    });
+
+    if (res.status === 200) {
+      toast({
+        title: t("emailVerification.resendSuccess"),
+        description: t("emailVerification.checkYourEmail"),
+      });
+    }
+  };
 
   return (
     <div

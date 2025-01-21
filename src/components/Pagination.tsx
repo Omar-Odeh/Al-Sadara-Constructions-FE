@@ -75,7 +75,7 @@ function Pagination({ totalPages, baseUrl }: Props) {
             {currentPage > 3 && <PaginationEllipsis />}
           </>
         )}
-        {renderedPages.map((page, i) => (
+        {renderedPages.slice(0, totalPages).map((page, i) => (
           <PaginationItem key={i}>
             <PaginationLink
               href={`${baseUrl}?page=${page}`}

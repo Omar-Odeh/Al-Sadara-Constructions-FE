@@ -59,7 +59,7 @@ app.post("/upload", (req, res, next) => {
 
     res.send({
       success: true,
-      message: "uploadedSuccessfuly",
+      message: "uploadedSuccessfully",
       file: req.file,
     });
   });

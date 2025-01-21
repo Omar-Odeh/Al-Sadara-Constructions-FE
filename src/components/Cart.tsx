@@ -17,15 +17,46 @@ import CartEmptyIcon from "@/icons/CartEmptyIcon";
 import PlusIcon from "@/icons/PlusIcon";
 import MinusIcon from "@/icons/MinusIcon";
 import TrashIcon from "@/icons/TrashIcon";
+import { toast } from "@/hooks/use-toast";
+import { useRef, useState } from "react";
 
 function Cart() {
   const { t } = useTranslation();
-  const { cart, getTotalPrice } = useCart();
+  const { cart, getTotalPrice, placeOrder } = useCart();
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmittion = () => {
+    setSubmitting(true);
+    placeOrder({
+      onSuccess: () => {
+        triggerRef.current?.click();
+        setTimeout(
+          () => toast({ title: t("productsPage.orderConfirmed") }),
+          450
+        );
+      },
+      onError: (error) => {
+        console.log(error);
+        triggerRef.current?.click();
+        setTimeout(
+          () =>
+            toast({
+              variant: "destructive",
+              title: t("productsPage.orderFailed"),
+              description: t("productsPage.pleaseTryAgain"),
+            }),
+          450
+        );
+      },
+    }).finally(() => setSubmitting(false));
+  };
 
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
         <button
+          ref={triggerRef}
           className="flex items-center justify-center w-16 h-16 relative bottom-0
                      text-white bg-accent hover:bg-accent-600 rounded-full"
         >
@@ -76,6 +107,8 @@ function Cart() {
               <p>{formatCurrency(getTotalPrice())}</p>
             </div>
             <button
+              disabled={submitting}
+              onClick={handleSubmittion}
               className="w-full px-10 py-2 transition-colors bg-accent 
                         hover:bg-accent-600 text-white font-medium rounded-lg"
             >
@@ -102,7 +135,7 @@ function CartProductItem({
     <div className="flex items-center w-[calc(100%_-_8px)] gap-4 p-4 border shadow-primary/30 shadow-md rounded-xl">
       <div className="w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-lg">
         <img
-          src={product.img_url}
+          src={product.imageUrl}
           alt="cart-item"
           className="min-w-full min-h-full object-cover"
         />
