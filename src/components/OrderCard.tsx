@@ -61,32 +61,40 @@ function OrderCard({ userRole, order, onStatusChange }: Props) {
       {userRole === UserRole.ADMIN && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div className="space-y-1 p-2 bg-neutral-400 border border-primary/50 rounded-md">
-              <UserIcon className="text-primary/50" />
+            <div className="flex items-center gap-4 py-2">
+              <div className="flex items-center justify-center min-w-10 h-10 bg-neutral-400 border border-primary/50 rounded-md shadow-md shadow-primary/30">
+                <UserIcon className="text-primary" />
+              </div>
               <p className="text-base md:text-lg font-medium">
-                {order.user.username}
+                {order.user.userName || order.user.username}
               </p>
             </div>
-            <div className="space-y-1 p-2 bg-neutral-400 border border-primary/50 rounded-md">
-              <MailIcon className="text-primary/50" />
+            <div className="flex items-center gap-4 py-2">
+              <div className="flex items-center justify-center min-w-10 h-10 bg-neutral-400 border border-primary/50 rounded-md shadow-md shadow-primary/30">
+                <MailIcon className="text-primary" />
+              </div>
               <p className="text-base md:text-lg font-medium">
                 {order.user.email}
               </p>
             </div>
-            <div className="space-y-1 p-2 bg-neutral-400 border border-primary/50 rounded-md">
-              <MapPin className="text-primary/50" />
+            <div className="flex items-center gap-4 py-2">
+              <div className="flex items-center justify-center min-w-10 h-10 bg-neutral-400 border border-primary/50 rounded-md shadow-md shadow-primary/30">
+                <MapPin className="text-primary" />
+              </div>
               <p className="text-base md:text-lg font-medium">
                 {order.user.address}
               </p>
             </div>
-            <div className="space-y-1 p-2 bg-neutral-400 border border-primary/50 rounded-md">
-              <PhoneIcon className="text-primary/50" />
+            <div className="flex items-center gap-4 py-2">
+              <div className="flex items-center justify-center min-w-10 h-10 bg-neutral-400 border border-primary/50 rounded-md shadow-md shadow-primary/30">
+                <PhoneIcon className="text-primary" />
+              </div>
               <p className="text-base md:text-lg font-medium">
                 {order.user.phone}
               </p>
             </div>
           </div>
-          <hr className="mb-4 border-primary/50" />
+          <hr className="mb-6 border-primary/50" />
         </>
       )}
       <motion.div
@@ -100,7 +108,7 @@ function OrderCard({ userRole, order, onStatusChange }: Props) {
         }
         animate={{
           height: expanded ? "fit-content" : 0,
-          marginBottom: expanded && userRole === UserRole.ADMIN ? 16 : 0,
+          marginBottom: expanded && userRole === UserRole.ADMIN ? 24 : 0,
           opacity: expanded ? 1 : 0,
           visibility: expanded ? "visible" : "hidden",
         }}
