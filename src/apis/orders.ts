@@ -31,9 +31,13 @@ export function updateOrderStatus(
   status: OrderStatus,
   config?: AxiosRequestConfig
 ) {
-  return axios.patch(`${BASE_URL}/${orderId}/status`, {
-    ...config,
-    headers: { ...config?.headers, ...basicAuth() },
-    params: { ...config?.params, status },
-  });
+  return axios.put(
+    `${BASE_URL}/${orderId}/status`,
+    {},
+    {
+      ...config,
+      headers: { ...config?.headers, ...basicAuth() },
+      params: { ...config?.params, status },
+    }
+  );
 }

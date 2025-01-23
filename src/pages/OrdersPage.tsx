@@ -6,6 +6,7 @@ import { Order, OrderStatus } from "@/models/order";
 import { getAllOrders, getUserOrders, updateOrderStatus } from "@/apis/orders";
 import { useMainContext } from "@/contexts/MainContext";
 import Pagination from "@/components/Pagination";
+import OrderCard from "@/components/OrderCard";
 import LoaderIcon from "@/icons/LoaderIcon";
 
 function OrdersPage() {
@@ -25,10 +26,10 @@ function OrdersPage() {
     const callback = role === UserRole.ADMIN ? getAllOrders : getUserOrders;
     try {
       const res = await callback({
-        params: { page, size: 15 },
+        params: { page, size: 10 },
       });
       if (res.status === 200) {
-        // setOrders((prev) => ({ ...prev, [page]: res.data.content }));
+        setOrders((prev) => ({ ...prev, [page]: res.data.content }));
         setTotalPages(Math.max(res.data.totalPages, 1));
       }
     } catch (e) {
@@ -36,6 +37,18 @@ function OrdersPage() {
     } finally {
       setTimeout(() => setLoading("orders", false), 1000);
     }
+  };
+
+  const updateOrderStatus = (
+    page: number,
+    index: number,
+    status: OrderStatus
+  ) => {
+    setOrders((prev) => {
+      const pageRecord = prev[page];
+      pageRecord[index].status = status;
+      return { ...prev, [page]: pageRecord };
+    });
   };
 
   useEffect(() => {
@@ -62,16 +75,16 @@ function OrdersPage() {
       </h1>
       {orders[page - 1]?.length ? (
         <>
-          <div className="space-y-6">
+          <div className="w-full space-y-6 !mb-10">
             {orders[page - 1]?.map((order, index) => (
-              <div
-                key={index}
-                // onClick={() =>
-                //   updateOrderStatus(order.orderId, OrderStatus.SHIPPED)
-                // }
-              >
-                {JSON.stringify(order)}
-              </div>
+              <OrderCard
+                key={order.orderId}
+                userRole={role}
+                order={order}
+                onStatusChange={(status) =>
+                  updateOrderStatus(page - 1, index, status)
+                }
+              />
             ))}
           </div>
           <div className="!mt-auto">

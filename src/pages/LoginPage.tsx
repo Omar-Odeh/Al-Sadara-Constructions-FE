@@ -10,43 +10,105 @@ function LoginPage() {
   const { t } = useTranslation();
   const { saveUser } = useUserData();
 
-  const [loginDetails, setLoginDetails] = useState<Partial<LoginDetails>>({});
-  const [signupDetails, setSignupDetails] = useState<Partial<SignupDetails>>(
-    {}
-  );
+  const [loginDetails, setLoginDetails] = useState<LoginDetails>({
+    email: "",
+    password: "",
+  });
+  const [signupDetails, setSignupDetails] = useState<SignupDetails>({
+    email: "",
+    password: "",
+    username: "",
+    phone: "",
+    address: "",
+  });
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [errorMsg, setErrorMsg] = useState({ login: "", signup: "" });
+
+  const getPattern = (key: string) => {
+    const patterns: Record<string, RegExp> = {
+      email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      phone:
+        /^\+?[1-9]\d{1,14}(\s|\-)?\(?\d{1,4}\)?(\s|\-)?\d{1,4}(\s|\-)?\d{1,4}$/,
+    };
+    return ["email", "phone"].includes(key) ? patterns[key] : null;
+  };
+
+  const validate = () => {
+    const details = mode === "login" ? loginDetails : signupDetails;
+    let msg = "",
+      isValid = true;
+    for (const [key, value] of Object.entries(details)) {
+      const pattern = getPattern(key);
+      if (!value) {
+        isValid = false;
+        msg = msg || t(`login.validation.${key}Required`);
+      } else if (pattern && !pattern.test(value)) {
+        isValid = false;
+        msg = msg || t(`login.validation.${key}Invalid`);
+      }
+    }
+    setErrorMsg((prev) => ({
+      ...prev,
+      [mode]: msg,
+    }));
+    return isValid;
+  };
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       const res = await login(loginDetails);
       if (res.status === 200) {
         const user = res.data as User;
         saveUser(user, loginDetails.password || "");
+        return;
       }
     } catch (error) {
       const err = error as AxiosError;
-      if (err?.response && err?.status === 403) {
+      const status = err?.status;
+      if (err?.response && status === 403) {
         const user = err.response.data as User;
         saveUser(user, loginDetails.password || "");
+        return;
+      } else if (typeof status === "number" && [401, 404].includes(status)) {
+        setErrorMsg((prev) => ({
+          ...prev,
+          login: t("login.invalidCredentials"),
+        }));
+        return;
       }
     }
+    setErrorMsg((prev) => ({
+      ...prev,
+      login: t("login.loginFailed"),
+    }));
   };
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       const res = await signup(signupDetails);
       if (res.status === 201) {
         const user = res.data as User;
         saveUser(user, signupDetails.password || "");
+        return;
       }
     } catch (error) {
       const err = error as AxiosError;
       if (err?.status === 409) {
-        console.log("email is used");
+        setErrorMsg((prev) => ({
+          ...prev,
+          signup: t("login.emailAlreadyUsed"),
+        }));
+        return;
       }
     }
+    setErrorMsg((prev) => ({
+      ...prev,
+      signup: t("login.signupFailed"),
+    }));
   };
 
   return (
@@ -91,6 +153,9 @@ function LoginPage() {
             className="w-full px-3 py-2 bg-white border border-primary outline-none rounded-lg"
           />
         </label>
+        {errorMsg.login && (
+          <p className="text-sm font-medium text-error">{errorMsg.login}</p>
+        )}
         <button
           type="submit"
           className="w-full !mt-10 px-10 py-2 transition-colors bg-accent 
@@ -104,7 +169,14 @@ function LoginPage() {
                     border-primary hover:bg-primary-50/20 font-medium rounded-lg"
           onClick={() => {
             setMode("signup");
-            setLoginDetails({});
+            setLoginDetails({
+              email: "",
+              password: "",
+            });
+            setErrorMsg((prev) => ({
+              ...prev,
+              login: "",
+            }));
           }}
         >
           {t("login.signup")}
@@ -190,6 +262,9 @@ function LoginPage() {
             className="w-full min-h-16 px-3 py-2 bg-white border border-primary outline-none rounded-lg"
           />
         </label>
+        {errorMsg.signup && (
+          <p className="text-sm font-medium text-error">{errorMsg.signup}</p>
+        )}
         <button
           type="submit"
           className="w-full !mt-10 px-10 py-2 transition-colors bg-accent 
@@ -203,7 +278,17 @@ function LoginPage() {
                     border-primary hover:bg-primary-50/20 font-medium rounded-lg"
           onClick={() => {
             setMode("login");
-            setSignupDetails({});
+            setSignupDetails({
+              email: "",
+              password: "",
+              username: "",
+              phone: "",
+              address: "",
+            });
+            setErrorMsg((prev) => ({
+              ...prev,
+              signup: "",
+            }));
           }}
         >
           {t("login.login")}

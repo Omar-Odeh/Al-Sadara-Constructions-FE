@@ -33,10 +33,14 @@ body {
   min-height: 100vh;
 }
 
+.order-details::-webkit-scrollbar,
 .cart-container > *::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
+.order-details::-webkit-scrollbar-track,
+.order-details::-webkit-scrollbar-thumb,
 .cart-container > *::-webkit-scrollbar-track,
 .cart-container > *::-webkit-scrollbar-thumb {
   border-radius: 8px;

@@ -77,7 +77,7 @@ function ProductsPage() {
         </div>
         {products[page - 1]?.length ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 !mb-10">
               {products[page - 1].map((product, index) => (
                 <ProductCard key={index} userRole={role} product={product} />
               ))}

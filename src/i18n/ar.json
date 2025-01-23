@@ -70,8 +70,19 @@
     "password": "كلمة المرور",
     "login": "تسجيل الدخول",
     "signup": "تسجيل الاشتراك",
-    "dontHaveAnAccount": "ليس لديك حساب؟",
-    "alreadyHaveAnAccount": "هل لديك حساب بالفعل؟"
+    "validation": {
+      "emailRequired": "الرجاء إدخال البريد الإلكتروني",
+      "passwordRequired": "الرجاء إدخال كلمة المرور",
+      "usernameRequired": "الرجاء إدخال اسم المستخدم",
+      "phoneRequired": "الرجاء إدخال رقم الهاتف",
+      "addressRequired": "الرجاء إدخال العنوان",
+      "emailInvalid": "البريد الإلكتروني خاطئ",
+      "phoneInvalid": "رقم الهاتف خاطئ"
+    },
+    "invalidCredentials": "معلومات تسجيل الدخول غير صحيحة",
+    "emailAlreadyUsed": "البريد الإلكتروني مستخدم",
+    "loginFailed": "فشلت عملية تسجيل الدخول",
+    "signupFailed": "فشلت عملية تسجيل الاشتراك"
   },
   "emailVerification": {
     "title": "تأكيد البريد الإلكتروني",
@@ -120,7 +131,18 @@
     "empty": {
       "tagline": "لم يتم العثور على أي طلبية",
       "description": "تصفح منتجاتنا لتجد ما يناسبك"
-    }
+    },
+    "status": "حالة الطلبية",
+    "statusPENDING": "قيد الانتظار",
+    "statusSHIPPED": "تم الشحن",
+    "statusARRIVED": "تم التوصيل",
+    "productName": "اسم المنتج",
+    "price": "السعر",
+    "quantity": "الكمية",
+    "amount": "المبلغ المطلوب",
+    "total": "المجموع",
+    "hideDetails": "إخفاء التفاصيل",
+    "showDetails": "إظهار التفاصيل"
   },
   "pagination": {
     "previous": "السابق",

@@ -1,4 +1,5 @@
 import { User } from "@/models/user";
+import { Product } from "./product";
 
 export enum OrderStatus {
   PENDING = "PENDING",
@@ -22,10 +23,7 @@ export interface Order {
   products: ProductResponseDTO[];
 }
 
-export interface ProductResponseDTO {
+export interface ProductResponseDTO extends Omit<Product, "id"> {
   productId: number;
-  name: string;
-  description: string;
-  price: number;
   quantity: number;
 }

@@ -56,13 +56,13 @@ function Header() {
       icon: <StoreIcon className="w-5 h-fit" />,
       visibility: ["confirmed"],
     },
-    // {
-    //   label: t("header.orders"),
-    //   to: "/orders",
-    //   search: { page: "1" },
-    //   icon: <TruckIcon className="w-5 h-fit" />,
-    //   visibility: ["confirmed"],
-    // },
+    {
+      label: t("header.orders"),
+      to: "/orders",
+      search: { page: "1" },
+      icon: <TruckIcon className="w-5 h-fit" />,
+      visibility: ["confirmed"],
+    },
     {
       label: t("header.logout"),
       to: "#",

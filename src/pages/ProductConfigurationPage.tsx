@@ -170,6 +170,7 @@ function ProductConfigurationPage() {
                   </span>
                   <input
                     type="number"
+                    min={0}
                     value={product.price}
                     onChange={(e) =>
                       setProduct((prev) => ({
