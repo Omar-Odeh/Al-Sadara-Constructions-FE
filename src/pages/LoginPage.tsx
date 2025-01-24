@@ -27,8 +27,7 @@ function LoginPage() {
   const getPattern = (key: string) => {
     const patterns: Record<string, RegExp> = {
       email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-      phone:
-        /^\+?[0-9]\d{1,14}(\s|\-)?\(?\d{1,4}\)?(\s|\-)?\d{1,4}(\s|\-)?\d{1,4}$/,
+      phone: /^\+?\d{1,15}(\s|\-)?\(?\d{1,4}\)?(\s|\-)?\d{1,4}(\s|\-)?\d{1,4}$/,
     };
     return ["email", "phone"].includes(key) ? patterns[key] : null;
   };

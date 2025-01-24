@@ -1,4 +1,4 @@
-const getPalette = require("tailwindcss-palette-generator");
+import getPalette from "tailwindcss-palette-generator";
 
 const palette = getPalette([
   {
