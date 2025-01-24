@@ -2,18 +2,24 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import cors from "cors";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import { v4 as uuid } from "uuid";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const imagesDir = path.join(__dirname, "images");
+if (!fs.existsSync(imagesDir)) {
+  fs.mkdirSync(imagesDir, { recursive: true });
+}
+
 const app = express();
 app.use(cors());
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "images"));
+    cb(null, imagesDir);
   },
   filename: (req, file, cb) => {
     const extension = file.originalname.match(/.[a-zA-Z0-9]+$/);
@@ -65,7 +71,7 @@ app.post("/upload", (req, res, next) => {
   });
 });
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(imagesDir));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
